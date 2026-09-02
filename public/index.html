@@ -707,12 +707,26 @@
             }
         }
 
-        function renderCalendario() {
-            // Aquí irá la lógica del calendario con disponibilidad real
+        async function renderCalendario() {
             const container = document.getElementById('calendar-container');
             container.innerHTML = '<p style="text-align: center; color: #999;">Cargando disponibilidad...</p>';
             
-            // TODO: Llamar a /api/dentalink/disponibilidad
+            try {
+                const response = await fetch('https://zenf-agenda-online.vercel.app/api/dentalink/disponibilidad', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        dentistaId: dentistaSeleccionado.id,
+                        fechaDesde: '2026-09-02',
+                        fechaHasta: '2026-09-30'
+                    })
+                });
+                
+                const data = await response.json();
+                container.innerHTML = '<p>Disponibilidad cargada</p>';
+            } catch (error) {
+                container.innerHTML = '<p style="color: red;">Error al cargar disponibilidad</p>';
+            }
         }
 
         async function agendarCita() {
