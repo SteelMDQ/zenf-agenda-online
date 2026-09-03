@@ -156,11 +156,17 @@ function renderProfessionals() {
 
 function branchesForProfessional(professional) {
   if (!professional || !Array.isArray(professional.sucursales) || professional.sucursales.length === 0) {
-    return state.branches;
+    return [];
   }
   const allowed = new Set(professional.sucursales.map(Number));
-  const filtered = state.branches.filter((branch) => allowed.has(Number(branch.id)));
-  return filtered.length ? filtered : state.branches;
+  return state.branches.filter((branch) => allowed.has(Number(branch.id)));
+}
+
+function branchAllowedForProfessional(professional, branch) {
+  if (!professional || !branch) return false;
+  return branchesForProfessional(professional).some(
+    (allowedBranch) => Number(allowedBranch.id) === Number(branch.id)
+  );
 }
 
 function renderBranches() {
@@ -274,6 +280,14 @@ async function loadSlots() {
     return;
   }
 
+  if (!branchAllowedForProfessional(state.selectedProfessional, state.selectedBranch)) {
+    state.selectedBranch = null;
+    el.branch.value = '';
+    clearSlots('Selecciona una sucursal válida para el profesional.');
+    setStatus('La sucursal seleccionada no corresponde a ese profesional.', 'error');
+    return;
+  }
+
   setBusy(true, 'Consultando disponibilidad real…');
   setStatus('');
   clearSlots('Consultando agenda…');
@@ -300,6 +314,13 @@ async function loadSlots() {
 function validateStepOne() {
   if (!state.selectedProfessional || !state.selectedBranch) {
     setStatus('Selecciona un profesional y una sucursal.', 'error');
+    return false;
+  }
+  if (!branchAllowedForProfessional(state.selectedProfessional, state.selectedBranch)) {
+    state.selectedBranch = null;
+    el.branch.value = '';
+    clearSlots();
+    setStatus('La sucursal seleccionada no corresponde a ese profesional.', 'error');
     return false;
   }
   return true;
@@ -347,6 +368,16 @@ function validateStepThree() {
 
 async function book() {
   if (!validateStepThree()) return;
+
+  if (!branchAllowedForProfessional(state.selectedProfessional, state.selectedBranch)) {
+    state.step = 1;
+    state.selectedBranch = null;
+    el.branch.value = '';
+    clearSlots();
+    renderStep();
+    setStatus('La relación profesional-sucursal cambió. Selecciona nuevamente.', 'error');
+    return;
+  }
 
   if (!state.writeEnabled) {
     setStatus('La confirmación online está temporalmente en mantención. No se ha creado ninguna cita.', 'info');
@@ -420,8 +451,12 @@ el.professional.addEventListener('change', () => {
 });
 
 el.branch.addEventListener('change', () => {
-  state.selectedBranch =
+  const candidate =
     state.branches.find((item) => String(item.id) === el.branch.value) || null;
+  state.selectedBranch = branchAllowedForProfessional(state.selectedProfessional, candidate)
+    ? candidate
+    : null;
+  if (!state.selectedBranch) el.branch.value = '';
   el.date.value = '';
   clearSlots();
   setStatus('');
