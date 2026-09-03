@@ -1,25 +1,4 @@
 {
   "buildCommand": "echo 'Static site'",
-  "outputDirectory": "public",
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "functions": {
-    "api/dentalink/datos-iniciales.js": {
-      "runtime": "nodejs20.x"
-    },
-    "api/dentalink/disponibilidad.js": {
-      "runtime": "nodejs20.x"
-    },
-    "api/dentalink/agendar.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "outputDirectory": "public"
 }
