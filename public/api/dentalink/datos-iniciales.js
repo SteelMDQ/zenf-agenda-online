@@ -1,18 +1,5 @@
-import axios from 'axios';
-
 export default async function handler(req, res) {
-    const dentalinkAPI = axios.create({
-        baseURL: 'https://api.dentalink.healthatom.com/api/v1',
-        ...
-    headers: {
-        'Authorization': `Bearer ${process.env.DENTALINK_API_KEY}`,
-        'Content-Type': 'application/json'
-    },
-    timeout: 10000
-});
-
-export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'https://zenf.cl');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     
     if (req.method === 'OPTIONS') {
@@ -24,36 +11,30 @@ export default async function handler(req, res) {
     }
 
     try {
-        const dentistasRes = await dentalinkAPI.get('/dentistas');
-        const dentistas = dentistasRes.data
-            .filter(d => d.habilitado && d.agenda_online)
-            .map(d => ({
-                id: d.id,
-                nombre: d.nombre,
-                apellidos: d.apellidos,
-                especialidad: d.especialidad,
-                habilitado: d.habilitado,
-                intervalo: d.intervalo,
-                sucursal_id: d.id_sucursal
-            }));
+        const dentistasRes = await fetch('https://api.dentalink.healthatom.com/api/v1/dentistas', {
+            headers: {
+                'Authorization': `Bearer ${process.env.DENTALINK_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const dentistas = await dentistasRes.json();
+        
+        const sucursalesRes = await fetch('https://api.dentalink.healthatom.com/api/v1/sucursales', {
+            headers: {
+                'Authorization': `Bearer ${process.env.DENTALINK_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const sucursales = await sucursalesRes.json();
 
-        const sucursalesRes = await dentalinkAPI.get('/sucursales');
-        const sucursales = sucursalesRes.data
-            .filter(s => s.habilitada)
-            .map(s => ({
-                id: s.id,
-                nombre: s.nombre,
-                ciudad: s.ciudad,
-                telefono: s.telefono
-            }));
-
-        res.status(200).json({ dentistas, sucursales });
+        res.status(200).json({ 
+            dentistas: dentistas.filter(d => d.habilitado && d.agenda_online),
+            sucursales: sucursales.filter(s => s.habilitada)
+        });
 
     } catch (error) {
-        console.error('Dentalink API Error:', error.message);
-        res.status(500).json({ 
-            error: 'No pudimos cargar los datos',
-            message: error.message 
-        });
+        res.status(500).json({ error: 'Error al cargar datos' });
     }
 }
