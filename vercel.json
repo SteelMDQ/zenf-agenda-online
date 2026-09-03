@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "functions": {
+    "api/dentalink/datos-iniciales.js": {
+      "runtime": "nodejs20.x"
+    },
+    "api/dentalink/disponibilidad.js": {
+      "runtime": "nodejs20.x"
+    },
+    "api/dentalink/agendar.js": {
+      "runtime": "nodejs20.x"
+    }
+  }
+}
