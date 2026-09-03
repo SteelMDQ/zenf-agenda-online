@@ -165,25 +165,29 @@
 
         // Cargar dentistas
         async function loadDentistas() {
-            try {
-                const response = await fetch(SUPABASE_URL, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const data = await response.json();
-                
-                motivoSelect.innerHTML = '<option value="">Por favor selecciona un profesional</option>';
-                data.dentistas.forEach(d => {
-                    const option = document.createElement('option');
-                    option.value = JSON.stringify({ id: d.id, sucursal: d.sucursal_id });
-                    option.textContent = `${d.nombre} (${d.especialidad})`;
-                    motivoSelect.appendChild(option);
-                });
-            } catch (err) {
-                showError('Error al cargar profesionales');
+    try {
+        const response = await fetch('https://api.dentalink.healthatom.com/api/v1/dentistas', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer gR8kr5FR3dtR6rg3Ynk99QmPy2cFNWaswg1w07.GMJwhQr6x18AJ16gRc3QzIvfxPoySozbwkZnPSIm',
+                'Content-Type': 'application/json'
             }
-        }
-
+        });
+        
+        const data = await response.json();
+        
+        motivoSelect.innerHTML = '<option value="">Por favor selecciona un profesional</option>';
+        data.filter(d => d.habilitado).forEach(d => {
+            const option = document.createElement('option');
+            option.value = JSON.stringify({ id: d.id, sucursal: d.sucursal_id });
+            option.textContent = `${d.nombre} (${d.especialidad})`;
+            motivoSelect.appendChild(option);
+        });
+    } catch (err) {
+        showError('Error al cargar profesionales: ' + err.message);
+    }
+}
+        
         // Cargar horarios
         async function loadHorarios() {
             if (!motivoSelect.value || !fechaInput.value) {
