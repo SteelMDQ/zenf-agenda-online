@@ -7,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const apiKey = 'TU_API_KEY_DENTALINK'; // Reemplaza con tu API key
+  const apiKey = 'gRe8kr5FR3dtRr6rp3Ynk99QmPy2cFNWaswgiwD7.GMJwhQr6xi8AJl6gRc3QzIvfxPoySozbwkZnPSIm'; // Reemplaza con tu API key
   
   try {
     const dentistasRes = await fetch('https://api.dentalink.healthatom.com/api/v1/dentistas', {
