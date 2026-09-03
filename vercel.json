@@ -1,23 +1,14 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/dentalink/*.js",
-      "use": "@vercel/node"
+  "functions": {
+    "api/dentalink/datos-iniciales.js": {
+      "runtime": "nodejs20.x"
     },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/dentalink/(.*)",
-      "dest": "/api/dentalink/$1"
+    "api/dentalink/disponibilidad.js": {
+      "runtime": "nodejs20.x"
     },
-    {
-      "src": "/(.*)",
-      "dest": "/public/$1"
+    "api/dentalink/agendar.js": {
+      "runtime": "nodejs20.x"
     }
-  ]
+  }
 }
