@@ -1,18 +1,5 @@
-import axios from 'axios';
-
 export default async function handler(req, res) {
-    const dentalinkAPI = axios.create({
-        baseURL: 'https://api.dentalink.healthatom.com/api/v1',
-        ...
-    headers: {
-        'Authorization': `Bearer ${process.env.DENTALINK_API_KEY}`,
-        'Content-Type': 'application/json'
-    },
-    timeout: 10000
-});
-
-export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || 'https://zenf.cl');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     
     if (req.method === 'OPTIONS') {
@@ -30,14 +17,14 @@ export default async function handler(req, res) {
     }
 
     try {
-        const citasRes = await dentalinkAPI.get(`/dentistas/${dentistaId}/citas`, {
-            params: {
-                fecha_desde: fechaDesde,
-                fecha_hasta: fechaHasta
+        const citasRes = await fetch(`https://api.dentalink.healthatom.com/api/v1/dentistas/${dentistaId}/citas?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`, {
+            headers: {
+                'Authorization': `Bearer ${process.env.DENTALINK_API_KEY}`,
+                'Content-Type': 'application/json'
             }
         });
 
-        const citas = citasRes.data || [];
+        const citas = await citasRes.json();
         const horarios = [];
         
         for (let h = 9; h < 18; h++) {
@@ -51,7 +38,6 @@ export default async function handler(req, res) {
         res.status(200).json({ horarios });
 
     } catch (error) {
-        console.error('Disponibilidad Error:', error.message);
         res.status(500).json({ error: 'Error al consultar disponibilidad' });
     }
 }
