@@ -10,5 +10,6 @@
     "api/dentalink/agendar.js": {
       "runtime": "nodejs20.x"
     }
-  }
+  },
+  "public": "public"
 }
