@@ -175,9 +175,10 @@
         });
         
         const data = await response.json();
+        const dentistas = Array.isArray(data) ? data : (data.data || data.dentistas || []);
         
         motivoSelect.innerHTML = '<option value="">Por favor selecciona un profesional</option>';
-        data.filter(d => d.habilitado).forEach(d => {
+        dentistas.filter(d => d.habilitado).forEach(d => {
             const option = document.createElement('option');
             option.value = JSON.stringify({ id: d.id, sucursal: d.sucursal_id });
             option.textContent = `${d.nombre} (${d.especialidad})`;
