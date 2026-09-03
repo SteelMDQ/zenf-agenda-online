@@ -595,7 +595,7 @@
         async function init() {
             try {
                 // Llamar a tu backend para obtener dentistas y sucursales
-                const response = await fetch('https://zenf-agenda-online.vercel.app/api/dentalink/datos-iniciales');
+                const response = await fetch('/api/dentalink/datos-iniciales');
                 const data = await response.json();
                 
                 dentistas = data.dentistas;
@@ -712,7 +712,7 @@
             container.innerHTML = '<p style="text-align: center; color: #999;">Cargando disponibilidad...</p>';
             
             try {
-                const response = await fetch('https://zenf-agenda-online.vercel.app/api/dentalink/disponibilidad', {
+                const response = await fetch('/api/dentalink/disponibilidad', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -741,7 +741,7 @@
             btn.innerHTML = '<span class="loading"></span>';
 
             try {
-                const response = await fetch('https://zenf-agenda-online.vercel.app/api/dentalink/agendar', {
+                const response = await fetch('/api/dentalink/agendar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
