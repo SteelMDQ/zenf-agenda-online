@@ -1,5 +1,6 @@
 {
-  "version": 2,
+  "buildCommand": "echo 'Static site'",
+  "outputDirectory": "public",
   "functions": {
     "api/dentalink/datos-iniciales.js": {
       "runtime": "nodejs20.x"
@@ -10,6 +11,5 @@
     "api/dentalink/agendar.js": {
       "runtime": "nodejs20.x"
     }
-  },
-  "public": "public"
+  }
 }
