@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-const dentalinkAPI = axios.create({
-    baseURL: 'https://api.dentalink.healthatom.com/api/v1',
+export default async function handler(req, res) {
+    const dentalinkAPI = axios.create({
+        baseURL: 'https://api.dentalink.healthatom.com/api/v1',
+        ...
     headers: {
         'Authorization': `Bearer ${process.env.DENTALINK_API_KEY}`,
         'Content-Type': 'application/json'
