@@ -35,7 +35,8 @@
     </ul>
 
     <h2>4. Publicidad y analítica</h2>
-    <p>Los parámetros técnicos de campaña (por ejemplo, etiquetas UTM) pueden conservarse temporalmente durante la sesión para conocer el origen general de una reserva. Estos eventos no incluyen RUT, nombre, teléfono, correo, diagnóstico, tratamiento ni contenido de la ficha clínica. Los parámetros de campaña guardados por la agenda se eliminan de la sesión después de una reserva confirmada.</p>
+    <p>La agenda puede conservar temporalmente, solo durante la sesión del navegador, identificadores técnicos y codificados de campaña como <code>utm_source</code>, <code>utm_medium</code>, <code>utm_campaign</code> y <code>utm_content</code>. No conserva <code>utm_term</code> ni parámetros de URL que contengan motivo de consulta, diagnóstico, tratamiento o identificadores del paciente.</p>
+    <p>La medición de la agenda es de primera parte: genera eventos locales como apertura de agenda, inicio de reserva, selección de horario y reserva confirmada, sin realizar por sí misma solicitudes de red a Meta, Google u otras plataformas publicitarias. Estos eventos no incluyen RUT, nombre, teléfono, correo, diagnóstico, tratamiento ni contenido de ficha clínica. Los parámetros de campaña guardados por la agenda se eliminan de la sesión después de una reserva confirmada.</p>
 
     <h2>5. Proveedores tecnológicos</h2>
     <p>ZENF puede utilizar proveedores tecnológicos estrictamente necesarios para la agenda, comunicaciones y gestión clínica. El acceso a datos personales debe limitarse a la finalidad correspondiente y sujetarse a las obligaciones legales y contractuales aplicables.</p>
