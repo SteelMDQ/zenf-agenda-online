@@ -2,10 +2,10 @@
 
 (() => {
   const ATTR_KEY = 'zenf_attribution_v1';
-  const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+  const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content'];
   const DROP_QUERY_KEYS = new Set([
     'motivo','rut','nombre','apellidos','email','correo','telefono','phone',
-    'diagnostico','diagnóstico','tratamiento','procedimiento','paciente'
+    'diagnostico','diagnóstico','tratamiento','procedimiento','paciente','utm_term'
   ]);
   const emitted = new Set();
 
@@ -13,7 +13,7 @@
     return String(value || '')
       .replace(/[\u0000-\u001F\u007F]/g, '')
       .trim()
-      .slice(0, 120);
+      .slice(0, 64);
   }
 
   function scrubSensitiveQuery() {
@@ -65,30 +65,25 @@
     return loadAttribution();
   }
 
-  function emit(name, extra = {}) {
+  function emit(name) {
     const safeName = cleanValue(name);
     if (!safeName) return;
 
     const detail = Object.freeze({
       event: safeName,
       timestamp: new Date().toISOString(),
-      attribution: currentAttribution(),
-      ...extra
+      attribution: currentAttribution()
     });
 
+    // Evento local de primera parte. No realiza solicitudes de red ni envía datos
+    // a Meta, Google u otros terceros.
     window.dispatchEvent(new CustomEvent('zenf:tracking', { detail }));
-
-    // dataLayer por sí solo no transmite información. Si en el futuro se conecta
-    // un gestor de etiquetas, recibirá únicamente estos eventos sin PII clínica.
-    if (Array.isArray(window.dataLayer)) {
-      window.dataLayer.push({ event: safeName, zenf: detail });
-    }
   }
 
-  function emitOnce(name, extra = {}) {
+  function emitOnce(name) {
     if (emitted.has(name)) return;
     emitted.add(name);
-    emit(name, extra);
+    emit(name);
   }
 
   function activeStep() {
