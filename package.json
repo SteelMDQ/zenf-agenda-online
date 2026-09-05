@@ -5,6 +5,6 @@
   "description": "Frontend estático seguro para la agenda online ZENF",
   "license": "UNLICENSED",
   "scripts": {
-    "check": "node --check public/app.js"
+    "check": "node --check public/app.js && node --check public/tracking.js"
   }
 }
